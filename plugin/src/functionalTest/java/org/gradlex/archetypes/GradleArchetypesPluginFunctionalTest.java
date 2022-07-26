@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GradleArchetypesPluginFunctionalTest {
 
-    File projectDir;
+    File projectDir; // we use the build directory instead of @TmpDir to make it easier to manually inspect outcome
 
     @BeforeEach
     void setup(TestInfo testInfo) throws IOException {
@@ -28,10 +29,12 @@ class GradleArchetypesPluginFunctionalTest {
         projectDir.mkdirs();
     }
 
-    @Test void canRunTask() throws IOException {
+    @Test
+    @DisplayName("Can generate project from template repository")
+    void canGenerateProjectFromTemplateRepository() throws IOException {
+        // setup:
         String pluginRepo = System.getProperty("pluginRepo");
-
-        String initGradleText = "\n" +
+        String initGradleText = "                                                          \n" +
                 "initscript {                                                              \n" +
                 "    repositories {                                                        \n" +
                 "        mavenCentral()                                                    \n" +
@@ -58,14 +61,14 @@ class GradleArchetypesPluginFunctionalTest {
 
         writeString(new File(projectDir, "init.gradle"), initGradleText);
 
-        // Run the build
+        // when:
         GradleRunner runner = GradleRunner.create();
         runner.forwardOutput();
         runner.withArguments("init", "--init-script", "init.gradle", "--template", /*"https://github.com/donat/gradle-template-basic"*/"/Users/donat/Development/git/donat/gradle-template-basic");
         runner.withProjectDir(projectDir);
         BuildResult result = runner.build();
 
-        // Verify the result
+        // then:
         assertTrue(result.getOutput().contains("Howdy"));
     }
 
