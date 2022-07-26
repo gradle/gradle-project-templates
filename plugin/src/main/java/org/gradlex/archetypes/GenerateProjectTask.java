@@ -42,9 +42,9 @@ public abstract class GenerateProjectTask extends InitBuild {
         Map<String, Object> data = loadTemplateData(optionsFile);
 
         // step3: generate files
-        TemplateEngine engine = new FreemarkerTemplateEngine();
-        engine.initialize(localRepoDir);
-        engine.processTemplates(getProject().getLogger(), targetDir, localRepoDir, data);
+        TemplateEngine templateEngine = new FreemarkerTemplateEngine();
+        templateEngine.initialize(localRepoDir);
+        new TemplateGeneration().processTemplates(getProject().getLogger(), targetDir, localRepoDir, data, templateEngine);
 
         // step4: delete cloned template repo
         FileUtils.deleteDirectory(localRepoDir);
