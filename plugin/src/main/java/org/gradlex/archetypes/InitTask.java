@@ -55,19 +55,13 @@ public abstract class InitTask extends InitBuild {
     private void materializeTemplate(String url) throws Exception {
         File localRepoDir = getProject().getLayout().getBuildDirectory().dir("tmp/gitClone").get().getAsFile();
         File targetDir = projectDir.getAsFile();
-        cloneRepositoryTo(url, localRepoDir);
+        getLogger().info("Cloning template repository. Source: " + url + ", destination: " + targetDir.getAbsolutePath() + ".");
+        TemplateRepository.from(url).clone(localRepoDir);
         Configuration configuration = loadFreemarkerConfiguration(localRepoDir);
         File optionsFile = new File(localRepoDir, "templateOptions.json");
         Map<String, Object> data = loadTemplateData(optionsFile);
         processTemplates(targetDir, localRepoDir, configuration, data);
         FileUtils.deleteDirectory(localRepoDir);
-    }
-
-    private void cloneRepositoryTo(String url, File localRepoDir) throws GitAPIException {
-        Git.cloneRepository()
-                .setURI(url)
-                .setDirectory(localRepoDir)
-                .call();
     }
 
     private static Configuration loadFreemarkerConfiguration(File localRepoDir) throws IOException {
