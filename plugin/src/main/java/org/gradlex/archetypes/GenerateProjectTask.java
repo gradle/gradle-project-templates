@@ -38,16 +38,12 @@ public abstract class GenerateProjectTask extends InitBuild {
 
     @Override
     public void setupProjectLayout() {
-        // do nothing
+        // hack superclass to do nothing here
     }
 
     @TaskAction
     public void initTaskAction() throws Exception {
-        getLogger().lifecycle("Howdy2");
-
-        String url = getTemplate().get();
-        getLogger().lifecycle("Cloning git repository: " + url);
-        materializeTemplate(url);
+        materializeTemplate(getTemplate().get());
     }
 
     private void materializeTemplate(String url) throws Exception {

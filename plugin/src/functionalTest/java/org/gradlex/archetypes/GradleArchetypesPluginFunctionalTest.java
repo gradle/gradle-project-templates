@@ -4,7 +4,6 @@
 package org.gradlex.archetypes;
 
 import org.apache.commons.io.FileUtils;
-import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,22 +15,57 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GradleArchetypesPluginFunctionalTest {
 
-    File projectDir; // we use the build directory instead of @TmpDir to make it easier to manually inspect outcome
+    // we use the build directory instead of @TmpDir to make it easier to manually inspect outcome
+    File projectDir;
+    File templateRepoDir;
 
     @BeforeEach
     void setup(TestInfo testInfo) throws IOException {
-        projectDir = new File(System.getProperty("testRootDir"), testInfo.getTestClass().get().getName() + "." + testInfo.getTestMethod().get().getName());
+        String testId = testInfo.getTestClass().get().getName() + "." + testInfo.getTestMethod().get().getName();
+        projectDir = new File(System.getProperty("testRootDir"), testId + "/project");
+        templateRepoDir = new File(System.getProperty("testRootDir"), testId + "/templateRepo");
         FileUtils.deleteDirectory(projectDir);
+        FileUtils.deleteDirectory(templateRepoDir);
         projectDir.mkdirs();
+        templateRepoDir.mkdirs();
     }
 
     @Test
     @DisplayName("Can generate project from template repository")
     void canGenerateProjectFromTemplateRepository() throws IOException {
+        String settingsScriptTemplate = "<#GradleTemplate>\n" +
+                "file=settings.gradle<#if dsl =='kotlin'>.kts</#if>\n" +
+                "</#GradleTemplate>\n" +
+                "\n" +
+                "rootProject.name = \"${projectName}\"";
+        String templateOptions = "{\n" +
+                "    \"name\": \"basic\",\n" +
+                "    \"questions\": [\n" +
+                "        {\n" +
+                "            \"type\": \"string\",\n" +
+                "            \"name\": \"projectName\",\n" +
+                "            \"question\": \"Project Name\",\n" +
+                "            \"default\": \"example\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"type\": \"choice\",\n" +
+                "            \"name\": \"dsl\",\n" +
+                "            \"question\": \"DSL\",\n" +
+                "            \"choices\": {\n" +
+                "                \"kotlin\": \"Kotlin\",\n" +
+                "                \"groovy\": \"Groovy\"\n" +
+                "            }\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}⏎";
+        writeString(new File(templateRepoDir, "settings.gradle"), settingsScriptTemplate);
+        writeString(new File(templateRepoDir, "templateOptions.json"), templateOptions);
+
         // setup:
         String pluginRepo = System.getProperty("pluginRepo");
         String initGradleText = "                                                          \n" +
@@ -64,12 +98,14 @@ class GradleArchetypesPluginFunctionalTest {
         // when:
         GradleRunner runner = GradleRunner.create();
         runner.forwardOutput();
-        runner.withArguments("init", "--init-script", "init.gradle", "--template", /*"https://github.com/donat/gradle-template-basic"*/"/Users/donat/Development/git/donat/gradle-template-basic");
+        runner.withArguments("init", "--init-script", "init.gradle", "--template", templateRepoDir.getAbsolutePath());
         runner.withProjectDir(projectDir);
-        BuildResult result = runner.build();
+        runner.build();
 
         // then:
-        assertTrue(result.getOutput().contains("Howdy"));
+        File settingsFile = new File(projectDir, "settings.gradle.kts");
+        assertTrue(settingsFile.exists());
+        assertEquals(FileUtils.readFileToString(settingsFile), "\nrootProject.name = \"example\"\n");
     }
 
     private void writeString(File file, String string) throws IOException {
