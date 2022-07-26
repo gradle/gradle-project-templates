@@ -42,19 +42,26 @@ public abstract class GenerateProjectTask extends InitBuild {
     }
 
     @TaskAction
-    public void initTaskAction() throws Exception {
-        materializeTemplate(getTemplate().get());
-    }
+    private void materializeTemplate() throws Exception {
+        String url = getTemplate().get();
 
-    private void materializeTemplate(String url) throws Exception {
+        // step 1: clone repository
         File localRepoDir = getProject().getLayout().getBuildDirectory().dir("tmp/gitClone").get().getAsFile();
         File targetDir = projectDir.getAsFile();
         getLogger().info("Cloning template repository. Source: " + url + ", destination: " + targetDir.getAbsolutePath() + ".");
         TemplateRepository.from(url).clone(localRepoDir);
-        Configuration configuration = loadFreemarkerConfiguration(localRepoDir);
+
+        // step2: parse templateOptions and read user input
         File optionsFile = new File(localRepoDir, "templateOptions.json");
         Map<String, Object> data = loadTemplateData(optionsFile);
+
+        // step3: configure template engine
+        Configuration configuration = loadFreemarkerConfiguration(localRepoDir);
+
+        // step4: generate files
         processTemplates(targetDir, localRepoDir, configuration, data);
+
+        // step5: delete cloned template repo
         FileUtils.deleteDirectory(localRepoDir);
     }
 
