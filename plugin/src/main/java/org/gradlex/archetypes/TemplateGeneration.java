@@ -14,6 +14,8 @@ import java.util.Map;
 public class TemplateGeneration {
 
     public void processTemplates(Logger logger, File targetLocation, File templateRepoCloneLocation, Map<String, Object> data, TemplateEngine templateEngine) throws Exception {
+        templateEngine.initialize(templateRepoCloneLocation);
+
         for (Object f : FileUtils.listFiles(templateRepoCloneLocation, null, true)) {
             File file = (File) f;
             if (file.isFile()) {

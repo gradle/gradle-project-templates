@@ -99,7 +99,7 @@ class GradleArchetypesPluginFunctionalTest {
         GradleRunner runner = GradleRunner.create();
         runner.forwardOutput();
         runner.withPluginClasspath();
-        runner.withArguments("init", "--init-script", "init.gradle", "--template", templateRepoDir.getAbsolutePath(), "-s");
+        runner.withArguments("init", "--init-script", "init.gradle", "--template", templateRepoDir.getAbsolutePath(), "-i");
         runner.withProjectDir(projectDir);
         runner.build();
 
