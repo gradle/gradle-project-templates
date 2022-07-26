@@ -12,8 +12,6 @@ import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.options.Option;
 import org.gradle.buildinit.tasks.InitBuild;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public abstract class InitTask extends InitBuild {
+public abstract class GenerateProjectTask extends InitBuild {
 
     private final Directory projectDir = getProject().getLayout().getProjectDirectory();
 

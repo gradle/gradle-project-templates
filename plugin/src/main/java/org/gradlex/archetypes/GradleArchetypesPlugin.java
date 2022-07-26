@@ -14,7 +14,7 @@ public class GradleArchetypesPlugin implements Plugin<Project> {
         });
 
         if (project.getParent() == null) {
-            project.afterEvaluate(project1 -> project1.getTasks().replace("init", InitTask.class));
+            project.afterEvaluate(project1 -> project1.getTasks().replace("init", GenerateProjectTask.class));
         }
     }
 }
