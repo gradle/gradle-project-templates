@@ -71,8 +71,7 @@ class GradleArchetypesPluginFunctionalTest {
         // Run the build
         GradleRunner runner = GradleRunner.create();
         runner.forwardOutput();
-        //runner.withPluginClasspath();
-        runner.withArguments("init", "--init-script", "init.gradle", "--template", "https://github.com/donat/gradle-template-basic");
+        runner.withArguments("init", "--init-script", "init.gradle", "--template", /*"https://github.com/donat/gradle-template-basic"*/"/Users/donat/Development/git/donat/gradle-template-basic");
         runner.withProjectDir(projectDir);
         BuildResult result = runner.build();
 
