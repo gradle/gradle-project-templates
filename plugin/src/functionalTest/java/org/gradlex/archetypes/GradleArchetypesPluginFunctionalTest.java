@@ -3,14 +3,12 @@
  */
 package org.gradlex.archetypes;
 
-import com.jcraft.jsch.IO;
 import org.apache.commons.io.FileUtils;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -28,14 +26,6 @@ class GradleArchetypesPluginFunctionalTest {
         projectDir = new File(System.getProperty("testRootDir"), testInfo.getTestClass().get().getName() + "." + testInfo.getTestMethod().get().getName());
         FileUtils.deleteDirectory(projectDir);
         projectDir.mkdirs();
-    }
-
-    private File getBuildFile() {
-        return new File(projectDir, "build.gradle");
-    }
-
-    private File getSettingsFile() {
-        return new File(projectDir, "settings.gradle");
     }
 
     @Test void canRunTask() throws IOException {
