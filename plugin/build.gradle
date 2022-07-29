@@ -3,6 +3,9 @@ plugins {
     id 'maven-publish'
 }
 
+group = 'org.gradlex'
+version = '0.0.1'
+
 repositories {
     mavenCentral()
 }
@@ -26,7 +29,6 @@ gradlePlugin {
     }
 }
 
-// Add a source set for the functional test suite
 sourceSets {
     functionalTest {
     }
@@ -34,9 +36,23 @@ sourceSets {
 
 configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
 
-// Add a task to run the functional tests
+String localRepoName = 'Mylocal'
+
+publishing {
+    repositories {
+        maven {
+            name = localRepoName
+            // change to point to your repo, e.g. http://my.org/repo
+            url = layout.buildDirectory.dir('repo')
+        }
+    }
+}
+
 tasks.register('functionalTest', Test) {
-    jvmArgs('-DtestRootDir=' + project.layout.buildDirectory.dir('functionalTest').get().asFile)
+    dependsOn "publishAllPublicationsTo${localRepoName}Repository"
+
+    jvmArgs('-DtestRootDir=' + project.layout.buildDirectory.dir('functionalTest').get().asFile,
+            "-DpluginRepo=" + layout.buildDirectory.dir('repo').get().asFile)
     testClassesDirs = sourceSets.functionalTest.output.classesDirs
     classpath = sourceSets.functionalTest.runtimeClasspath
     useJUnitPlatform()
@@ -48,29 +64,3 @@ tasks.named('check') {
     // Run the functional tests as part of `check`
     dependsOn(tasks.functionalTest)
 }
-
-tasks.named('test') {
-    // Use JUnit Jupiter for unit tests.
-    useJUnitPlatform()
-}
-
-
-String localRepoName = 'Mylocal'
-publishing {
-    repositories {
-        maven {
-            name = localRepoName
-            // change to point to your repo, e.g. http://my.org/repo
-            url = layout.buildDirectory.dir('repo')
-        }
-    }
-}
-
-group = 'org.gradlex'
-version = '0.0.1'
-
-tasks.named('functionalTest') {Test test ->
-    dependsOn "publishAllPublicationsTo${localRepoName}Repository"
-    test.jvmArgs("-DpluginRepo=" + layout.buildDirectory.dir('repo').get().asFile)
-}
-
