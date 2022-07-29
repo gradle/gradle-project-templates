@@ -11,10 +11,12 @@ import org.gradle.buildinit.tasks.InitBuild;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class GenerateProjectTask extends InitBuild {
 
+    private static final String templateOptionsFilePath = "templateOptions.json";
     private final Directory projectDir = getProject().getLayout().getProjectDirectory();
 
     @Input
@@ -38,7 +40,7 @@ public abstract class GenerateProjectTask extends InitBuild {
         TemplateRepository.from(url).clone(localRepoDir);
 
         // step2: parse templateOptions and read user input
-        File optionsFile = new File(localRepoDir, "templateOptions.json");
+        File optionsFile = new File(localRepoDir, templateOptionsFilePath);
         Map<String, Object> data = loadTemplateData(optionsFile);
 
         // step3: generate files
@@ -49,9 +51,14 @@ public abstract class GenerateProjectTask extends InitBuild {
     }
 
     private Map<String, Object> loadTemplateData(File optionsFile) throws IOException {
-        // TODO no options file
-        Descriptor descriptor = Descriptor.read(optionsFile);
-        return new Interrogator(getServices().get(UserInputHandler.class)).askQuestions(descriptor.getQuestions());
+        if (!optionsFile.exists()) {
+            getLogger().info("No template options file found at " + optionsFile);
+            return new HashMap<>();
+        } else {
+            getLogger().info("Using template options file " + optionsFile);
+            Descriptor descriptor = Descriptor.read(optionsFile);
+            return new Interrogator(getServices().get(UserInputHandler.class)).askQuestions(descriptor.getQuestions());
+        }
     }
 }
 
