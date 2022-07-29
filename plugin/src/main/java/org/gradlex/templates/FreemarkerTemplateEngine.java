@@ -1,4 +1,4 @@
-package org.gradlex.archetypes;
+package org.gradlex.templates;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

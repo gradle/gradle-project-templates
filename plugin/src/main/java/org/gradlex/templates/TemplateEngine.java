@@ -1,4 +1,4 @@
-package org.gradlex.archetypes;
+package org.gradlex.templates;
 
 import java.io.File;
 import java.util.List;

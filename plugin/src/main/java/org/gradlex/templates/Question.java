@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradlex.archetypes;
+package org.gradlex.templates;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

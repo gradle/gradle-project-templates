@@ -1,4 +1,4 @@
-package org.gradlex.archetypes;
+package org.gradlex.templates;
 
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.file.Directory;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradlex.archetypes;
+package org.gradlex.templates;
 
 public class Gradle {
 

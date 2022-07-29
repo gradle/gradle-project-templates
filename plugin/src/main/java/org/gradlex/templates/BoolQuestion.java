@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-package org.gradlex.archetypes;
+package org.gradlex.templates;
 
-import org.gradle.util.GradleVersion;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.gradle.api.internal.tasks.userinput.UserInputHandler;
 
-public class TemplateGradleVersion {
+public class BoolQuestion extends Question {
 
-    private static final GradleVersion gradleVersion = GradleVersion.current();
+    @JsonProperty("default")
+    private Boolean defaultChoice;
 
-    public String getVersion() {
-        return gradleVersion.getVersion();
+    public Boolean getDefaultChoice() {
+        return defaultChoice;
     }
 
-    public boolean sameOrNewer(String version) {
-        return GradleVersion.version(version).compareTo(gradleVersion) <= 0;
+    public void setDefaultChoice(Boolean defaultChoice) {
+        this.defaultChoice = defaultChoice;
     }
+
+    @Override
+    public Boolean ask(UserInputHandler userInputHandler) {
+        return userInputHandler.askYesNoQuestion(getQuestion(), getDefaultChoice());
+    }
+
 }

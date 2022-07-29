@@ -23,8 +23,8 @@ dependencies {
 gradlePlugin {
     plugins {
         greeting {
-            id = 'org.gradlex.archetypes.greeting'
-            implementationClass = 'org.gradlex.archetypes.GradleArchetypesPlugin'
+            id = 'org.gradlex.templates'
+            implementationClass = 'org.gradlex.templates.GradleTemplatesPlugin'
         }
     }
 }

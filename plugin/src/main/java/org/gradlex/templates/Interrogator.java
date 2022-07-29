@@ -14,27 +14,29 @@
  * limitations under the License.
  */
 
-package org.gradlex.archetypes;
+package org.gradlex.templates;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.gradle.api.internal.tasks.userinput.UserInputHandler;
 
-public class StringQuestion extends Question {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-    @JsonProperty("default")
-    private String defaultValue;
+public class Interrogator {
 
-    public String getDefaultValue() {
-        return defaultValue;
+    private UserInputHandler userInputHandler;
+
+    public Interrogator(UserInputHandler userInputHandler) {
+        this.userInputHandler = userInputHandler;
     }
 
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    @Override
-    public Object ask(UserInputHandler userInputHandler) {
-        return userInputHandler.askQuestion(this.getQuestion(), getDefaultValue());
+    public Map<String, Object> askQuestions(List<Question> questions) {
+        Map<String, Object> answers = new HashMap<>();
+        for (Question question : questions) {
+            // TODO: add check if the entry already exists?
+            answers.put(question.getName(), question.ask(userInputHandler));
+        }
+        return answers;
     }
 
 }

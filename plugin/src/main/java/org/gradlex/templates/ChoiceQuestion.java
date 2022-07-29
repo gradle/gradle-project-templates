@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradlex.archetypes;
+package org.gradlex.templates;
 
 import org.gradle.api.internal.tasks.userinput.UserInputHandler;
 
