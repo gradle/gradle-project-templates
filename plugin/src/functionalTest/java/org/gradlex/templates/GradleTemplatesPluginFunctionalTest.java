@@ -124,7 +124,6 @@ class GradleTemplatesPluginFunctionalTest {
     private BuildResult runBuild(String... args) {
         GradleRunner runner = GradleRunner.create();
         runner.forwardOutput();
-        runner.withPluginClasspath();
         runner.withArguments(args);
         runner.withProjectDir(projectDir);
         return runner.build();

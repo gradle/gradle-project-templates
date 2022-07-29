@@ -15,18 +15,18 @@ import java.util.Properties;
 
 public class TemplateGeneration {
 
-    public void processTemplates(Logger logger, File targetLocation, File templateRepoCloneLocation, Map<String, Object> data, TemplateEngine templateEngine) throws Exception {
-        templateEngine.initialize(templateRepoCloneLocation);
+    public void processTemplates(Logger logger, File targetDir, File cloneDir, Map<String, Object> data, TemplateEngine templateEngine) throws Exception {
+        templateEngine.initialize(cloneDir);
 
-        for (Object f : FileUtils.listFiles(templateRepoCloneLocation, null, true)) {
+        for (Object f : FileUtils.listFiles(cloneDir, null, true)) {
             File file = (File) f;
             if (file.isFile()) {
                 URI fileUri = file.toURI();
-                URI baseUri = templateRepoCloneLocation.toURI();
+                URI baseUri = cloneDir.toURI();
                 String relativePath = baseUri.relativize(fileUri).getPath();
                 logger.info("Processing " + relativePath);
                 if (!isIgnored(relativePath)) {
-                    processTemplate(logger, targetLocation, data, file, baseUri, templateRepoCloneLocation, templateEngine);
+                    processTemplate(logger, targetDir, data, file, baseUri, cloneDir, templateEngine);
                 }
             }
         }

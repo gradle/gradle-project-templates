@@ -17,7 +17,6 @@ import java.util.Map;
 
 public abstract class GenerateProjectTask extends InitBuild {
 
-    private static final String templateOptionsFilePath = "templateOptions.json";
     private final Directory projectDir = getProject().getLayout().getProjectDirectory();
 
     @Input
@@ -40,40 +39,14 @@ public abstract class GenerateProjectTask extends InitBuild {
         if (getList().isPresent()) {
             getLogger().quiet("Listing available templates");
         } else if (getTemplate().isPresent()) {
-            materializeTemplate();
+            new MaterializeTemplateAction(
+                    getServices(),
+                    getTemplate().get(),
+                    getProject().getLayout().getBuildDirectory().dir("tmp/gitClone").get().getAsFile(),
+                    projectDir.getAsFile(), getLogger()
+            ).execute();
         } else {
             getLogger().error("Task requires either the --template or the --list task option");
-        }
-    }
-
-    private void materializeTemplate() throws Exception {
-        String url = getTemplate().get();
-
-        // step 1: clone repository
-        File localRepoDir = getProject().getLayout().getBuildDirectory().dir("tmp/gitClone").get().getAsFile();
-        File targetDir = projectDir.getAsFile();
-        getLogger().info("Cloning template repository. Source: " + url + ", destination: " + targetDir.getAbsolutePath() + ".");
-        TemplateRepository.from(url).clone(localRepoDir);
-
-        // step2: parse templateOptions and read user input
-        File optionsFile = new File(localRepoDir, templateOptionsFilePath);
-        Map<String, Object> data = loadTemplateData(optionsFile);
-
-        // step3: generate files
-        new TemplateGeneration().processTemplates(getProject().getLogger(), targetDir, localRepoDir, data, new FreemarkerTemplateEngine());
-
-        // step4: delete cloned template repo
-        FileUtils.deleteDirectory(localRepoDir);
-    }
-
-    private Map<String, Object> loadTemplateData(File optionsFile) throws IOException {
-        if (!optionsFile.exists()) {
-            getLogger().info("No template options file found at " + optionsFile);
-            return new HashMap<>();
-        } else {
-            getLogger().info("Using template options file " + optionsFile);
-            Descriptor descriptor = Descriptor.read(optionsFile);
-            return new Interrogator(getServices().get(UserInputHandler.class)).askQuestions(descriptor.getQuestions());
         }
     }
 }
