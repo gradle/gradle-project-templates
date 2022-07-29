@@ -6,24 +6,22 @@ import java.util.Map;
 
 public interface TemplateEngine {
 
+    String getMetadataBeginTag();
+
+    String getMetadataEndTag();
+
     /**
      * Called once before processing all files in the template repository.
-     *
-     * @param templateRepoCloneLocation TODO
-     * @throws Exception TODO
      */
-    void initialize(File templateRepoCloneLocation) throws Exception; // TODO consider more specific exception here
+    void initialize(File cloneDir) throws Exception; // TODO consider more specific exception here
 
     /**
-     *
-     * @param templateRepoCloneLocation
-     * @param file
-     * @param metadata
-     * @param data
-     * @return A string representing a properties file
-     * @throws Exception
+     * Returns the string version of the metadata
      */
-    String processTemplateMetadata(File templateRepoCloneLocation, File file, List<String> metadata, Map<String, Object> data) throws Exception;
+    String processTemplateMetadata(File cloneDir, File templateFile, List<String> metadata, Map<String, Object> data) throws Exception; // TODO templateFile should not be necessary here
 
-    void processTemplate(File localRepoDir, File file, File targetFile, Map<String, Object> data) throws Exception;
+    /**
+     * Generates a templateFile from the template
+     */
+    void processTemplate(File cloneDir, File templateFile, File target, Map<String, Object> data) throws Exception;
 }

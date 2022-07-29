@@ -34,6 +34,11 @@ sourceSets {
     }
 }
 
+tasks.named('test') {
+    // Use JUnit Jupiter for unit tests.
+    useJUnitPlatform()
+}
+
 configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
 
 String localRepoName = 'Mylocal'

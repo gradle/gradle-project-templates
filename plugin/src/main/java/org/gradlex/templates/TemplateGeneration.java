@@ -33,7 +33,7 @@ public class TemplateGeneration {
     }
 
     private void processTemplate(Logger logger, File targetDir, Map<String, Object> data, File file, URI baseUri, File localRepoDir, TemplateEngine templateEngine) throws Exception {
-        Template template = Template.from(file);
+        Template template = Template.from(file, templateEngine.getMetadataBeginTag(), templateEngine.getMetadataEndTag());
         Map<String, Object> finalData = new HashMap<>();
         if (template.hasMetadata()) {
             String metadataPropertiesString = templateEngine.processTemplateMetadata(localRepoDir, file, template.getMetadata(), data);
@@ -89,22 +89,22 @@ public class TemplateGeneration {
             return lines.subList(1, endLine);
         }
 
-        static Template from(File file) throws IOException {
+        static Template from(File file, String beginTag, String endTag) throws IOException {
             List<String> lines = FileUtils.readLines(file, "UTF-8");
 
             boolean hasMetadata = false;
             int endLine = -1;
-            if (lines.size() > 0 && lines.get(0).startsWith("<#GradleTemplate>")) {
+            if (lines.size() > 0 && lines.get(0).startsWith(beginTag)) {
                 hasMetadata = true;
                 for (int i = 1; i < lines.size(); i++) {
-                    if (lines.get(i).equals("</#GradleTemplate>"))  {
+                    if (lines.get(i).equals(endTag))  {
                         endLine = i;
                         break;
                     }
                 }
             }
             if (hasMetadata && endLine == -1) {
-                throw new RuntimeException("No </#GradleTemplate> tag found for <#GradleTemplate>");
+                throw new RuntimeException("No " + endTag + " tag found for " + beginTag);
             }
 
             return new Template(file, lines, hasMetadata, endLine);
