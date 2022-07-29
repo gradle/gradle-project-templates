@@ -52,7 +52,7 @@ public class FreemarkerTemplateEngine implements TemplateEngine {
         StringWriter writer = new StringWriter();
 
         Map<String, Object> finalData = new HashMap<>();
-        finalData.put("gradleVersion", new TemplateGradleVersion());
+        finalData.put("gradleVersion", new TemplateGradleVersion()); // TODO GradleVersion should be injected somewhere else
         finalData.putAll(data);
         paramsTemplate.process(finalData, writer, null);
         Properties props = new Properties();
