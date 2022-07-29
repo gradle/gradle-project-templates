@@ -31,7 +31,7 @@ public class MaterializeTemplateAction {
     public void execute() throws Exception {
         // step 1: clone repository
         logger.info("Cloning template repository. Source: " + url + ", destination: " + targetDir.getAbsolutePath() + ".");
-        TemplateRepository.from(url).clone(cloneDir);
+        TemplateRepository.from(url, new TextFileDownloader()).clone(cloneDir);
 
         // step2: parse templateOptions and read user input
         File optionsFile = new File(cloneDir, templateOptionsFilePath);
