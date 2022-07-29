@@ -1,6 +1,7 @@
 package org.gradlex.templates;
 
 import org.apache.commons.io.FileUtils;
+import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +24,7 @@ class GradleTemplatesPluginFunctionalTest {
 
     @BeforeEach
     void setup(TestInfo testInfo) throws IOException {
+        // clean project directories
         String testId = testInfo.getTestClass().get().getName() + "." + testInfo.getTestMethod().get().getName();
         projectDir = new File(System.getProperty("testRootDir"), testId + "/project");
         templateRepoDir = new File(System.getProperty("testRootDir"), testId + "/templateRepo");
@@ -30,6 +32,45 @@ class GradleTemplatesPluginFunctionalTest {
         FileUtils.deleteDirectory(templateRepoDir);
         projectDir.mkdirs();
         templateRepoDir.mkdirs();
+
+        // setup init script
+        String pluginRepo = System.getProperty("pluginRepo");
+        String initGradleText = "                                                          \n" +
+                "initscript {                                                              \n" +
+                "    repositories {                                                        \n" +
+                "        mavenCentral()                                                    \n" +
+                "        maven {                                                           \n" +
+                "             url ='" + pluginRepo + "'                                    \n" +
+                "        }                                                                 \n" +
+                "    }                                                                     \n" +
+                "                                                                          \n" +
+                "    dependencies {                                                        \n" +
+                "       classpath 'org.gradlex:plugin:0.0.1'                               \n" +
+                "       classpath 'org.freemarker:freemarker:2.3.31'                       \n" + // TODO dependencies should be packaged with the plugin
+                "       classpath 'org.eclipse.jgit:org.eclipse.jgit:5.7.0.202003110725-r' \n" + // TODO dependencies should be packaged with the plugin
+                "       classpath 'commons-io:commons-io:1.4'                              \n" + // TODO dependencies should be packaged with the plugin
+                "       classpath 'com.fasterxml.jackson.core:jackson-core:2.13.3'         \n" + // TODO dependencies should be packaged with the plugin
+                "       classpath 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'  \n" + // TODO dependencies should be packaged with the plugin
+                "       classpath 'com.fasterxml.jackson.core:jackson-databind:2.13.3'     \n" + // TODO dependencies should be packaged with the plugin
+                "    }                                                                     \n" +
+                "}                                                                         \n" +
+                "                                                                          \n" +
+                "rootProject {                                                             \n" +
+                "    apply plugin: org.gradlex.templates.GradleTemplatesPlugin             \n" +
+                "}                                                                         \n" +
+                "                                                                          \n";
+
+        writeString(new File(projectDir, "init.gradle"), initGradleText);
+    }
+
+    @Test
+    @DisplayName("Can list available templates")
+    void canListAvailableTemplates() throws Exception {
+        // when:
+        BuildResult result = runBuild("init", "--list", "--init-script", "init.gradle");;
+
+        // then:
+        result.getOutput().contains("what");
     }
 
     @Test
@@ -64,39 +105,13 @@ class GradleTemplatesPluginFunctionalTest {
         writeString(new File(templateRepoDir, "templateOptions.json"), templateOptions);
 
         // setup:
-        String pluginRepo = System.getProperty("pluginRepo");
-        String initGradleText = "                                                          \n" +
-                "initscript {                                                              \n" +
-                "    repositories {                                                        \n" +
-                "        mavenCentral()                                                    \n" +
-                "        maven {                                                           \n" +
-                "             url ='" + pluginRepo + "'                                    \n" +
-                "        }                                                                 \n" +
-                "    }                                                                     \n" +
-                "                                                                          \n" +
-                "    dependencies {                                                        \n" +
-                "       classpath 'org.gradlex:plugin:0.0.1'                               \n" +
-                "       classpath 'org.freemarker:freemarker:2.3.31'                       \n" + // TODO dependencies should be packaged with the plugin
-                "       classpath 'org.eclipse.jgit:org.eclipse.jgit:5.7.0.202003110725-r' \n" + // TODO dependencies should be packaged with the plugin
-                "       classpath 'commons-io:commons-io:1.4'                              \n" + // TODO dependencies should be packaged with the plugin
-                "       classpath 'com.fasterxml.jackson.core:jackson-core:2.13.3'         \n" + // TODO dependencies should be packaged with the plugin
-                "       classpath 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'  \n" + // TODO dependencies should be packaged with the plugin
-                "       classpath 'com.fasterxml.jackson.core:jackson-databind:2.13.3'     \n" + // TODO dependencies should be packaged with the plugin
-                "    }                                                                     \n" +
-                "}                                                                         \n" +
-                "                                                                          \n" +
-                "rootProject {                                                             \n" +
-                "    apply plugin: org.gradlex.templates.GradleTemplatesPlugin             \n" +
-                "}                                                                         \n" +
-                "                                                                          \n";
 
-        writeString(new File(projectDir, "init.gradle"), initGradleText);
 
         // when:
         GradleRunner runner = GradleRunner.create();
         runner.forwardOutput();
         runner.withPluginClasspath();
-        runner.withArguments("init", "--init-script", "init.gradle", "--template", templateRepoDir.getAbsolutePath(), "-i");
+        runBuild("init", "--init-script", "init.gradle", "--template", templateRepoDir.getAbsolutePath());
         runner.withProjectDir(projectDir);
         runner.build();
 
@@ -104,6 +119,15 @@ class GradleTemplatesPluginFunctionalTest {
         File settingsFile = new File(projectDir, "settings.gradle.kts");
         assertTrue(settingsFile.exists());
         assertEquals(FileUtils.readFileToString(settingsFile), "\nrootProject.name = \"example\"\n");
+    }
+
+    private BuildResult runBuild(String... args) {
+        GradleRunner runner = GradleRunner.create();
+        runner.forwardOutput();
+        runner.withPluginClasspath();
+        runner.withArguments(args);
+        runner.withProjectDir(projectDir);
+        return runner.build();
     }
 
     private void writeString(File file, String string) throws IOException {
