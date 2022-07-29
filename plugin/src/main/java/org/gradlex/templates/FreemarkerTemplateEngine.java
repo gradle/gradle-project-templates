@@ -39,7 +39,7 @@ public class FreemarkerTemplateEngine implements TemplateEngine {
     }
 
     @Override
-    public Map<String, Object> processTemplateMetadata(File templateRepoCloneLocation, File file, List<String> metadata, Map<String, Object> data) throws Exception {
+    public String processTemplateMetadata(File templateRepoCloneLocation, File file, List<String> metadata, Map<String, Object> data) throws Exception {
         String paramTemplateName = file.getName() + ".GradleTemplate"; // TODO use relative path to avoid template caching
         File paramsTemplateFile = new File(templateRepoCloneLocation, paramTemplateName); // TODO check for collisions
         if (paramsTemplateFile.exists()) {
@@ -55,13 +55,7 @@ public class FreemarkerTemplateEngine implements TemplateEngine {
         finalData.put("gradleVersion", new TemplateGradleVersion()); // TODO GradleVersion should be injected somewhere else
         finalData.putAll(data);
         paramsTemplate.process(finalData, writer, null);
-        Properties props = new Properties();
-        props.load(new StringReader(writer.toString()));
-        for (Object key : props.keySet()) {
-            finalData.put((String) key, props.get(key));
-        }
-        paramsTemplateFile.delete();
-        return finalData;
+        return writer.toString();
     }
 
     @Override

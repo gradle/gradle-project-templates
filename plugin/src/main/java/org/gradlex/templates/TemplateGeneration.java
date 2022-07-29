@@ -5,11 +5,13 @@ import org.gradle.api.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class TemplateGeneration {
 
@@ -32,10 +34,15 @@ public class TemplateGeneration {
 
     private void processTemplate(Logger logger, File targetDir, Map<String, Object> data, File file, URI baseUri, File localRepoDir, TemplateEngine templateEngine) throws Exception {
         Template template = Template.from(file);
-
         Map<String, Object> finalData = new HashMap<>();
         if (template.hasMetadata()) {
-            finalData.putAll(templateEngine.processTemplateMetadata(localRepoDir, file, template.getMetadata(), data));
+            String metadataPropertiesString = templateEngine.processTemplateMetadata(localRepoDir, file, template.getMetadata(), data);
+            Properties props = new Properties();
+            props.load(new StringReader(metadataPropertiesString));
+            for (Object key : props.keySet()) {
+                finalData.put((String) key, props.get(key));
+            }
+            finalData.put("gradleVersion", new TemplateGradleVersion());
             template.deleteMetadata();
         }
 
