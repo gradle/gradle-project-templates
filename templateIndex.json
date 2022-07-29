@@ -1,0 +1,12 @@
+[
+  {
+    "group": "gradle",
+    "template": "basic",
+    "url": "https://github.com/donat/gradle-template-basic"
+  },
+  {
+    "group": "gradle",
+    "template": "java",
+    "url": "https://github.com/donat/gradle-template-basic"
+  }
+]
