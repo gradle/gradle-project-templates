@@ -6,8 +6,17 @@ import java.util.Map;
 
 public interface TemplateEngine {
 
+    /**
+     * @returns The begin tag of the template metadata. If file starts with the begin tag then the template generation
+     * strips reads the file until the end tag is found, calls {@link #processTemplateMetadata(File, File, List, Map)}
+     * with the content between the tags, and finally deletes the metadata from the file.
+     */
     String getMetadataBeginTag();
 
+    /**
+     * @returns the end tag of the template metadata.
+     * @see #getMetadataBeginTag()
+     */
     String getMetadataEndTag();
 
     /**
