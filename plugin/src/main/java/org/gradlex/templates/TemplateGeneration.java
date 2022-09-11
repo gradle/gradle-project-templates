@@ -15,7 +15,7 @@ import java.util.Properties;
 
 public class TemplateGeneration {
 
-    public void processTemplates(Logger logger, File targetDir, File cloneDir, Map<String, Object> data, TemplateEngine templateEngine) throws Exception {
+    public void processTemplates(File cloneDir, File targetDir, Map<String, Object> data, TemplateEngine templateEngine, Logger logger) throws Exception {
         templateEngine.initialize(cloneDir);
 
         for (Object f : FileUtils.listFiles(cloneDir, null, true)) {
@@ -26,17 +26,17 @@ public class TemplateGeneration {
                 String relativePath = baseUri.relativize(fileUri).getPath();
                 logger.info("Processing " + relativePath);
                 if (!isIgnored(relativePath)) {
-                    processTemplate(logger, targetDir, data, file, baseUri, cloneDir, templateEngine);
+                    processTemplate(logger, targetDir, data, file, cloneDir, templateEngine);
                 }
             }
         }
     }
 
-    private void processTemplate(Logger logger, File targetDir, Map<String, Object> data, File file, URI baseUri, File localRepoDir, TemplateEngine templateEngine) throws Exception {
+    private void processTemplate(Logger logger, File targetDir, Map<String, Object> data, File file, File cloneDir, TemplateEngine templateEngine) throws Exception {
         Template template = Template.from(file, templateEngine.getMetadataBeginTag(), templateEngine.getMetadataEndTag());
         Map<String, Object> finalData = new HashMap<>();
         if (template.hasMetadata()) {
-            String metadataPropertiesString = templateEngine.processTemplateMetadata(localRepoDir, file, template.getMetadata(), data);
+            String metadataPropertiesString = templateEngine.processTemplateMetadata(cloneDir, file, template.getMetadata(), data);
             Properties props = new Properties();
             props.load(new StringReader(metadataPropertiesString));
             for (Object key : props.keySet()) {
@@ -46,16 +46,16 @@ public class TemplateGeneration {
         }
 
         finalData.putAll(data);
-        Object skip = finalData.get("skip"); // TODO externalize and document built-in properties
-        if (skip == null || !"true".equals(skip)) {
+        Object skip = finalData.getOrDefault("skip", "false"); // TODO externalize and document built-in properties
+        if (!skip.equals("true")) {
             String fileName = (String) finalData.get("file");
             String targetFileName = file.getName();
             URI generatedFileUri = new File(file.getParentFile(), targetFileName).toURI();
-            String generatedFileRelativePath =  fileName == null ? baseUri.relativize(generatedFileUri).getPath() : fileName;
+            String generatedFileRelativePath =  fileName == null ? cloneDir.toURI().relativize(generatedFileUri).getPath() : fileName;
             File targetFile = new File(targetDir, generatedFileRelativePath);
 
             logger.info("Processing " + targetFile.getAbsolutePath());
-            templateEngine.processTemplate(localRepoDir, file, targetFile, finalData);
+            templateEngine.processTemplate(cloneDir, file, targetFile, finalData);
         } else {
             logger.info("Skipping " + file.getAbsolutePath());
         }
@@ -89,6 +89,7 @@ public class TemplateGeneration {
         }
 
         static Template from(File file, String beginTag, String endTag) throws IOException {
+            @SuppressWarnings("unchecked")
             List<String> lines = FileUtils.readLines(file, "UTF-8");
 
             boolean hasMetadata = false;

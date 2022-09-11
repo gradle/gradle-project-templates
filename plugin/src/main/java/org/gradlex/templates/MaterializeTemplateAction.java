@@ -38,7 +38,7 @@ public class MaterializeTemplateAction {
         data.put("gradleVersion", new TemplateGradleVersion());
 
         // step3: generate files
-        new TemplateGeneration().processTemplates(logger, targetDir, cloneDir, data, new FreemarkerTemplateEngine());
+        new TemplateGeneration().processTemplates(cloneDir, targetDir, data, new FreemarkerTemplateEngine(), logger);
 
         // step4: delete cloned template repo
         FileUtils.deleteDirectory(cloneDir);
