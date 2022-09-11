@@ -46,12 +46,6 @@ class GradleTemplatesPluginFunctionalTest {
                 "                                                                          \n" +
                 "    dependencies {                                                        \n" +
                 "       classpath 'org.gradlex:plugin:0.0.1'                               \n" +
-                "       classpath 'org.freemarker:freemarker:2.3.31'                       \n" + // TODO dependencies should be packaged with the plugin
-                "       classpath 'org.eclipse.jgit:org.eclipse.jgit:5.7.0.202003110725-r' \n" + // TODO dependencies should be packaged with the plugin
-                "       classpath 'commons-io:commons-io:1.4'                              \n" + // TODO dependencies should be packaged with the plugin
-                "       classpath 'com.fasterxml.jackson.core:jackson-core:2.13.3'         \n" + // TODO dependencies should be packaged with the plugin
-                "       classpath 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'  \n" + // TODO dependencies should be packaged with the plugin
-                "       classpath 'com.fasterxml.jackson.core:jackson-databind:2.13.3'     \n" + // TODO dependencies should be packaged with the plugin
                 "    }                                                                     \n" +
                 "}                                                                         \n" +
                 "                                                                          \n" +
