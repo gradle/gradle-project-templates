@@ -36,6 +36,7 @@ public class MaterializeTemplateAction {
         // step2: parse templateOptions and read user input
         File optionsFile = new File(cloneDir, templateOptionsFilePath);
         Map<String, Object> data = loadTemplateData(optionsFile);
+        data.put("gradleVersion", new TemplateGradleVersion());
 
         // step3: generate files
         new TemplateGeneration().processTemplates(logger, targetDir, cloneDir, data, new FreemarkerTemplateEngine());

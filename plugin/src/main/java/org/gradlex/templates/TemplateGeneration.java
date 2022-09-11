@@ -42,7 +42,6 @@ public class TemplateGeneration {
             for (Object key : props.keySet()) {
                 finalData.put((String) key, props.get(key));
             }
-            finalData.put("gradleVersion", new TemplateGradleVersion());
             template.deleteMetadata();
         }
 
