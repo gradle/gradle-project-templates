@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class MaterializeTemplateAction {
 
-    private static final String templateOptionsFilePath = "templateOptions.json";
+    private static final String TEMPLATE_OPTIONS_FILE_PATH = "templateOptions.json";
 
     private final UserInputHandler userInputHandler;
     private final String url;
@@ -29,11 +29,11 @@ public class MaterializeTemplateAction {
 
     public void execute() throws Exception {
         // step 1: clone repository
-        logger.info("Cloning template repository. Source: " + url + ", destination: " + targetDir.getAbsolutePath() + ".");
+        logger.info("Cloning template repository. Source: " + url + ", destination: " + cloneDir.getAbsolutePath() + ".");
         TemplateRepository.from(url, new TextFileDownloader()).clone(cloneDir);
 
         // step2: parse templateOptions and read user input
-        File optionsFile = new File(cloneDir, templateOptionsFilePath);
+        File optionsFile = new File(cloneDir, TEMPLATE_OPTIONS_FILE_PATH);
         Map<String, Object> data = loadTemplateData(optionsFile);
         data.put("gradleVersion", new TemplateGradleVersion());
 
