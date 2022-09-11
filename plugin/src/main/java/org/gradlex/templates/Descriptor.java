@@ -24,7 +24,7 @@ import java.util.List;
 
 public class Descriptor {
     private String name;
-    private Gradle gradle;
+    private Gradle gradle; // TODO supported Gradle version is not validated
     private List<Question> questions;
 
     public String getName() {
