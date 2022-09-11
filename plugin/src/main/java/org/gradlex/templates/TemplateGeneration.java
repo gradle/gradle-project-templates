@@ -26,13 +26,13 @@ public class TemplateGeneration {
                 String relativePath = baseUri.relativize(fileUri).getPath();
                 logger.info("Processing " + relativePath);
                 if (!isIgnored(relativePath)) {
-                    processTemplate(logger, targetDir, data, file, cloneDir, templateEngine);
+                    processTemplate(file, cloneDir, targetDir, data, templateEngine, logger);
                 }
             }
         }
     }
 
-    private void processTemplate(Logger logger, File targetDir, Map<String, Object> data, File file, File cloneDir, TemplateEngine templateEngine) throws Exception {
+    private void processTemplate(File file, File cloneDir, File targetDir, Map<String, Object> data, TemplateEngine templateEngine, Logger logger) throws Exception {
         Template template = Template.from(file, templateEngine.getMetadataBeginTag(), templateEngine.getMetadataEndTag());
         Map<String, Object> finalData = new HashMap<>();
         if (template.hasMetadata()) {
