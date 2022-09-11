@@ -3,7 +3,6 @@ package org.gradlex.templates;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.internal.tasks.userinput.UserInputHandler;
 import org.gradle.api.logging.Logger;
-import org.gradle.internal.service.ServiceRegistry;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,14 +13,14 @@ public class MaterializeTemplateAction {
 
     private static final String templateOptionsFilePath = "templateOptions.json";
 
-    private final ServiceRegistry services;
+    private final UserInputHandler userInputHandler;
     private final String url;
     private final File cloneDir;
     private final File targetDir;
     private final Logger logger;
 
-    public MaterializeTemplateAction(ServiceRegistry services, String url, File cloneDir, File targetDir, Logger logger) {
-        this.services = services;
+    public MaterializeTemplateAction(UserInputHandler userInputHandler, String url, File cloneDir, File targetDir, Logger logger) {
+        this.userInputHandler = userInputHandler;
         this.url = url;
         this.cloneDir = cloneDir;
         this.targetDir = targetDir;
@@ -52,7 +51,7 @@ public class MaterializeTemplateAction {
         } else {
             logger.info("Using template options file " + optionsFile);
             Descriptor descriptor = Descriptor.read(optionsFile);
-            return new Interrogator(services.get(UserInputHandler.class)).askQuestions(descriptor.getQuestions());
+            return new Interrogator(userInputHandler).askQuestions(descriptor.getQuestions());
         }
     }
 }

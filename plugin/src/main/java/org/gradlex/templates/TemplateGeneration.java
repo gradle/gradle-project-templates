@@ -46,7 +46,7 @@ public class TemplateGeneration {
         }
 
         finalData.putAll(data);
-        Object skip = finalData.get("skip");
+        Object skip = finalData.get("skip"); // TODO externalize and document built-in properties
         if (skip == null || !"true".equals(skip)) {
             String fileName = (String) finalData.get("file");
             String targetFileName = file.getName();

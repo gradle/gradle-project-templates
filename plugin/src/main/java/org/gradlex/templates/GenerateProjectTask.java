@@ -1,6 +1,7 @@
 package org.gradlex.templates;
 
 import org.gradle.api.file.Directory;
+import org.gradle.api.internal.tasks.userinput.UserInputHandler;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
@@ -36,7 +37,7 @@ public abstract class GenerateProjectTask extends InitBuild {
             ).execute();
         } else if (getTemplate().isPresent()) {
             new MaterializeTemplateAction(
-                    getServices(),
+                    getServices().get(UserInputHandler.class),
                     getTemplate().get(),
                     getProject().getLayout().getBuildDirectory().dir("tmp/gitClone").get().getAsFile(),
                     projectDir.getAsFile(), getLogger()
