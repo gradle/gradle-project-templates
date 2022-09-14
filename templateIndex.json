@@ -6,7 +6,7 @@
   },
   {
     "group": "gradle",
-    "template": "java",
-    "url": "https://github.com/donat/gradle-template-basic"
+    "template": "show-and-tell",
+    "url": "https://github.com/donat/gradle-showandtell-template"
   }
 ]
