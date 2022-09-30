@@ -17,7 +17,6 @@
 package org.gradlex.templates;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.gradle.api.internal.tasks.userinput.UserInputHandler;
 
 public class StringQuestion extends Question {
 
@@ -33,8 +32,7 @@ public class StringQuestion extends Question {
     }
 
     @Override
-    public Object ask(UserInputHandler userInputHandler) {
+    public Object ask(InputHandler userInputHandler) {
         return userInputHandler.askQuestion(this.getQuestion(), getDefaultValue());
     }
-
 }

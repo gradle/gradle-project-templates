@@ -15,7 +15,7 @@ import java.util.Properties;
 
 public class TemplateGeneration {
 
-    public void processTemplates(File cloneDir, File targetDir, Map<String, Object> data, TemplateEngine templateEngine, Logger logger) throws Exception {
+    public void processTemplates(File cloneDir, File targetDir, Map<String, Object> data, TemplateEngine templateEngine, TemplateLogger logger) throws Exception {
         templateEngine.initialize(cloneDir);
 
         for (Object f : FileUtils.listFiles(cloneDir, null, true)) {
@@ -32,7 +32,7 @@ public class TemplateGeneration {
         }
     }
 
-    private void processTemplate(File file, File cloneDir, File targetDir, Map<String, Object> data, TemplateEngine templateEngine, Logger logger) throws Exception {
+    private void processTemplate(File file, File cloneDir, File targetDir, Map<String, Object> data, TemplateEngine templateEngine, TemplateLogger logger) throws Exception {
         Template template = Template.from(file, templateEngine.getMetadataBeginTag(), templateEngine.getMetadataEndTag());
         Map<String, Object> finalData = new HashMap<>();
         if (template.hasMetadata()) {

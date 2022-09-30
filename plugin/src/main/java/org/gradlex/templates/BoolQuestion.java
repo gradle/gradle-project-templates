@@ -17,7 +17,6 @@
 package org.gradlex.templates;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.gradle.api.internal.tasks.userinput.UserInputHandler;
 
 public class BoolQuestion extends Question {
 
@@ -33,7 +32,7 @@ public class BoolQuestion extends Question {
     }
 
     @Override
-    public Boolean ask(UserInputHandler userInputHandler) {
+    public Boolean ask(InputHandler userInputHandler) {
         return userInputHandler.askYesNoQuestion(getQuestion(), getDefaultChoice());
     }
 

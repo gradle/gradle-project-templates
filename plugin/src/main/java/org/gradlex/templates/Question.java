@@ -18,7 +18,6 @@ package org.gradlex.templates;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.gradle.api.internal.tasks.userinput.UserInputHandler;
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -49,5 +48,5 @@ public abstract class Question {
         this.name = name;
     }
 
-    public abstract Object ask(UserInputHandler userInputHandler);
+    public abstract Object ask(InputHandler userInputHandler);
 }

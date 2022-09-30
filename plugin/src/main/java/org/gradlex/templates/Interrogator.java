@@ -16,17 +16,15 @@
 
 package org.gradlex.templates;
 
-import org.gradle.api.internal.tasks.userinput.UserInputHandler;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Interrogator {
 
-    private UserInputHandler userInputHandler;
+    private InputHandler userInputHandler;
 
-    public Interrogator(UserInputHandler userInputHandler) {
+    public Interrogator(InputHandler userInputHandler) {
         this.userInputHandler = userInputHandler;
     }
 

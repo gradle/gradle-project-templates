@@ -13,14 +13,14 @@ public class MaterializeTemplateAction {
 
     private static final String TEMPLATE_OPTIONS_FILE_PATH = "templateOptions.json";
 
-    private final UserInputHandler userInputHandler;
+    private final InputHandler userInputHandler;
     private final String url;
     private final File cloneDir;
     private final File targetDir;
-    private final Logger logger;
+    private final TemplateLogger logger;
 
-    public MaterializeTemplateAction(UserInputHandler userInputHandler, String url, File cloneDir, File targetDir, Logger logger) {
-        this.userInputHandler = userInputHandler;
+    public MaterializeTemplateAction(InputHandler inputHandler, String url, File cloneDir, File targetDir, TemplateLogger logger) {
+        this.userInputHandler = inputHandler;
         this.url = url;
         this.cloneDir = cloneDir;
         this.targetDir = targetDir;

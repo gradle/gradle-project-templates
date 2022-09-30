@@ -16,8 +16,6 @@
 
 package org.gradlex.templates;
 
-import org.gradle.api.internal.tasks.userinput.UserInputHandler;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,7 +33,7 @@ public class ChoiceQuestion extends Question {
     }
 
     @Override
-    public Object ask(UserInputHandler userInputHandler) {
+    public Object ask(InputHandler userInputHandler) {
         List<Choice> choices = getChoices()
             .entrySet()
             .stream()
