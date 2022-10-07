@@ -1,6 +1,4 @@
-package org.gradlex.templates.standalone;
-
-import org.gradlex.templates.TemplateLogger;
+package templates;
 
 public class StandaloneLogger implements TemplateLogger {
     @Override

@@ -1,2 +1,4 @@
 rootProject.name = 'gradle-project-templates'
+include('lib')
+include('app')
 include('plugin')

@@ -1,6 +1,7 @@
 package org.gradlex.templates;
 
 import org.gradle.api.logging.Logger;
+import templates.TemplateLogger;
 
 public class GradleLogger implements TemplateLogger {
 

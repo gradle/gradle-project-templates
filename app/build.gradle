@@ -1,0 +1,22 @@
+plugins {
+    id 'application'
+}
+
+group = 'org.gradlex'
+version = '0.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':lib')
+}
+
+tasks.register("runApp", JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "templates.GradleTemplateMain"
+    args "--template", "/Users/donat/Development/git/donat/gradle-template-basic"
+    workingDir = "/tmp/foo"
+    standardInput = System.in
+}

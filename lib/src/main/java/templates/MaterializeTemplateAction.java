@@ -1,8 +1,6 @@
-package org.gradlex.templates;
+package templates;
 
 import org.apache.commons.io.FileUtils;
-import org.gradle.api.internal.tasks.userinput.UserInputHandler;
-import org.gradle.api.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +33,7 @@ public class MaterializeTemplateAction {
         // step2: parse templateOptions and read user input
         File optionsFile = new File(cloneDir, TEMPLATE_OPTIONS_FILE_PATH);
         Map<String, Object> data = loadTemplateData(optionsFile);
-        data.put("gradleVersion", new TemplateGradleVersion());
+        //data.put("gradleVersion", new TemplateGradleVersion()); // TODO how to set Gradle version in templates
 
         // step3: generate files
         new TemplateGeneration().processTemplates(cloneDir, targetDir, data, new FreemarkerTemplateEngine(), logger);

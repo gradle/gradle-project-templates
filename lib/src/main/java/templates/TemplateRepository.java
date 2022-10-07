@@ -1,4 +1,4 @@
-package org.gradlex.templates;
+package templates;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.apache.commons.io.FileUtils;

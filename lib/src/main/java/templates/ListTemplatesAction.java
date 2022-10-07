@@ -1,7 +1,6 @@
-package org.gradlex.templates;
+package templates;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import org.gradle.api.logging.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,10 +8,10 @@ import java.util.List;
 public class ListTemplatesAction {
 
     private static String INDEX_FILE_URL = "https://raw.githubusercontent.com/gradle/gradle-project-templates/main/templateIndex.json"; // TODO remode duplication
-    private final Logger logger;
+    private final TemplateLogger logger;
     private final TextFileDownloader textFileDownloader;
 
-    public ListTemplatesAction(Logger logger, TextFileDownloader textFileDownloader) {
+    public ListTemplatesAction(TemplateLogger logger, TextFileDownloader textFileDownloader) {
         this.logger = logger;
         this.textFileDownloader = textFileDownloader;
     }
@@ -30,7 +29,7 @@ public class ListTemplatesAction {
 
     private void printIndex(List<IndexItem> items) {
         for (IndexItem item : items) {
-            logger.quiet(item.getGroup() + "/" + item.getTemplate()  + " -> " + item.getUrl());
+            logger.info(item.getGroup() + "/" + item.getTemplate()  + " -> " + item.getUrl()); //TODO it was logger.quiet
         }
     }
 }

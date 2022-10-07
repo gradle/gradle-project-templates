@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package org.gradlex.templates;
+package templates;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+public class Gradle {
 
-public class BoolQuestion extends Question {
+    String minVersion;
+    String maxVersion;
 
-    @JsonProperty("default")
-    private Boolean defaultChoice;
-
-    public Boolean getDefaultChoice() {
-        return defaultChoice;
+    public String getMinVersion() {
+        return minVersion;
     }
 
-    public void setDefaultChoice(Boolean defaultChoice) {
-        this.defaultChoice = defaultChoice;
+    public void setMinVersion(String minVersion) {
+        this.minVersion = minVersion;
     }
 
-    @Override
-    public Boolean ask(InputHandler userInputHandler) {
-        return userInputHandler.askYesNoQuestion(getQuestion(), getDefaultChoice());
+    public String getMaxVersion() {
+        return maxVersion;
     }
 
+    public void setMaxVersion(String maxVersion) {
+        this.maxVersion = maxVersion;
+    }
 }

@@ -1,11 +1,9 @@
-package org.gradlex.templates.standalone;
-
+package templates;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public interface UserInputHandler {
-
+public interface InputHandler {
     @Nullable
     Boolean askYesNoQuestion(String question);
 
@@ -15,4 +13,3 @@ public interface UserInputHandler {
 
     String askQuestion(String question, String defaultValue);
 }
-

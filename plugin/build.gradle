@@ -11,14 +11,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.freemarker:freemarker:2.3.31'
-    implementation 'org.eclipse.jgit:org.eclipse.jgit:5.7.0.202003110725-r'
-    implementation 'commons-io:commons-io:1.4'
-    implementation 'commons-lang:commons-lang:2.6'
-    implementation 'com.google.guava:guava:31.1-jre'
-    implementation('com.fasterxml.jackson.core:jackson-core:2.13.3')
-    implementation('com.fasterxml.jackson.core:jackson-annotations:2.13.3')
-    implementation('com.fasterxml.jackson.core:jackson-databind:2.13.3')
+    implementation project(':lib')
+    testImplementation 'commons-io:commons-io:1.4'
+    testImplementation 'commons-lang:commons-lang:2.6'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 }
 
@@ -50,16 +45,17 @@ publishing {
         maven {
             name = localRepoName
             // change to point to your repo, e.g. http://my.org/repo
-            url = layout.buildDirectory.dir('repo')
+            url = rootProject.layout.buildDirectory.dir('repo')
         }
     }
 }
 
 tasks.register('functionalTest', Test) {
-    dependsOn "publishAllPublicationsTo${localRepoName}Repository"
+    dependsOn ":plugin:publishAllPublicationsTo${localRepoName}Repository"
+    dependsOn ":lib:publishAllPublicationsTo${localRepoName}Repository"
 
     jvmArgs('-DtestRootDir=' + project.layout.buildDirectory.dir('functionalTest').get().asFile,
-            "-DpluginRepo=" + layout.buildDirectory.dir('repo').get().asFile)
+            "-DpluginRepo=" + project.rootProject.layout.buildDirectory.dir('repo').get().asFile)
     testClassesDirs = sourceSets.functionalTest.output.classesDirs
     classpath = sourceSets.functionalTest.runtimeClasspath
     useJUnitPlatform()

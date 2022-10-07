@@ -1,7 +1,4 @@
-package org.gradlex.templates;
-
-import org.gradlex.templates.standalone.StandaloneLogger;
-import org.gradlex.templates.standalone.StandaloneUserInputHandler;
+package templates;
 
 import java.io.File;
 
@@ -28,5 +25,7 @@ public class GradleTemplateMain {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        // TODO the plugin variant generates Gradle wrapper files here; the standalone version should behave the same way
     }
 }

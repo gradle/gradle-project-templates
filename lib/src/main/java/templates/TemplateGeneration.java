@@ -1,7 +1,6 @@
-package org.gradlex.templates;
+package templates;
 
 import org.apache.commons.io.FileUtils;
-import org.gradle.api.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;

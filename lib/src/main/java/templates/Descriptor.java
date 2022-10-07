@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradlex.templates;
+package templates;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
 

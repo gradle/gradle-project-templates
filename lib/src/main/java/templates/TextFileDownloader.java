@@ -1,4 +1,4 @@
-package org.gradlex.templates;
+package templates;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

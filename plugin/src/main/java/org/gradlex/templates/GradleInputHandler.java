@@ -2,6 +2,7 @@ package org.gradlex.templates;
 
 
 import org.gradle.api.internal.tasks.userinput.UserInputHandler;
+import templates.InputHandler;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-package org.gradlex.templates;
+package templates;
 
-import org.gradle.util.GradleVersion;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class TemplateGradleVersion {
+public class StringQuestion extends Question {
 
-    private static final GradleVersion gradleVersion = GradleVersion.current();
+    @JsonProperty("default")
+    private String defaultValue;
 
-    public String getVersion() {
-        return gradleVersion.getVersion();
+    public String getDefaultValue() {
+        return defaultValue;
     }
 
-    public boolean sameOrNewer(String version) {
-        return GradleVersion.version(version).compareTo(gradleVersion) <= 0;
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    @Override
+    public Object ask(InputHandler userInputHandler) {
+        return userInputHandler.askQuestion(this.getQuestion(), getDefaultValue());
     }
 }

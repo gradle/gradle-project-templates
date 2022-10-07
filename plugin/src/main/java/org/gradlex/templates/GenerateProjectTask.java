@@ -8,6 +8,9 @@ import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.options.Option;
 import org.gradle.buildinit.tasks.InitBuild;
+import templates.ListTemplatesAction;
+import templates.MaterializeTemplateAction;
+import templates.TextFileDownloader;
 
 public abstract class GenerateProjectTask extends InitBuild {
     private final Directory projectDir = getProject().getLayout().getProjectDirectory();
@@ -32,7 +35,7 @@ public abstract class GenerateProjectTask extends InitBuild {
         if (getList().isPresent()) {
             getLogger().info("Listing available templates");
             new ListTemplatesAction(
-                    getLogger(),
+                    new GradleLogger(getLogger()),
                     new TextFileDownloader() // TODO cache downloaded file
             ).execute();
         } else if (getTemplate().isPresent()) {

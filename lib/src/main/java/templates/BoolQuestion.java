@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package org.gradlex.templates;
+package templates;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class StringQuestion extends Question {
+public class BoolQuestion extends Question {
 
     @JsonProperty("default")
-    private String defaultValue;
+    private Boolean defaultChoice;
 
-    public String getDefaultValue() {
-        return defaultValue;
+    public Boolean getDefaultChoice() {
+        return defaultChoice;
     }
 
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
+    public void setDefaultChoice(Boolean defaultChoice) {
+        this.defaultChoice = defaultChoice;
     }
 
     @Override
-    public Object ask(InputHandler userInputHandler) {
-        return userInputHandler.askQuestion(this.getQuestion(), getDefaultValue());
+    public Boolean ask(InputHandler userInputHandler) {
+        return userInputHandler.askYesNoQuestion(getQuestion(), getDefaultChoice());
     }
+
 }

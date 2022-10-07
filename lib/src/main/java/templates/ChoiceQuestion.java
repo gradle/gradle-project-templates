@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradlex.templates;
+package templates;
 
 import java.util.List;
 import java.util.Map;

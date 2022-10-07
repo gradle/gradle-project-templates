@@ -1,0 +1,43 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group = 'org.gradlex'
+version = '0.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.freemarker:freemarker:2.3.31'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:5.7.0.202003110725-r'
+    implementation 'commons-io:commons-io:1.4'
+    implementation 'commons-lang:commons-lang:2.6'
+    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+}
+
+String localRepoName = 'Mylocal'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'org.gradlex'
+            artifactId = 'lib'
+            version = '0.0.1'
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = localRepoName
+            // change to point to your repo, e.g. http://my.org/repo
+            url = rootProject.layout.buildDirectory.dir('repo')
+        }
+    }
+}

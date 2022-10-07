@@ -1,4 +1,4 @@
-package org.gradlex.templates;
+package templates;
 
 public class IndexItem {
 
