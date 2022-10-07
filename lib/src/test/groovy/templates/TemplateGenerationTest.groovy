@@ -68,7 +68,7 @@ content'''
         processTemplates()
 
         then:
-        new File(targetDir, 'f').text == 'content\n' // TODO there should not be a newline
+        new File(targetDir, 'f').text == 'content'
     }
 
 

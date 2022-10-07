@@ -1,18 +1,31 @@
 package templates;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class TemplateGeneration {
+
+    private static final String LINE_SEPARATOR;
+    static {
+        // avoid security issues
+        StringWriter buf = new StringWriter(4);
+        PrintWriter out = new PrintWriter(buf);
+        out.println();
+        LINE_SEPARATOR = buf.toString();
+    }
 
     public void processTemplates(File cloneDir, File targetDir, Map<String, Object> data, TemplateEngine templateEngine, TemplateLogger logger) throws Exception {
         if (!cloneDir.exists()) {
@@ -115,7 +128,7 @@ public class TemplateGeneration {
 
         public void deleteMetadata() throws IOException {
             if (!metadataDeleted) {
-                FileUtils.writeLines(file, lines.subList(endLine + 1, lines.size()));
+                FileUtils.writeStringToFile(file, lines.subList(endLine + 1, lines.size()).stream().collect(Collectors.joining(LINE_SEPARATOR)));
                 metadataDeleted = true;
             } else {
                 throw new RuntimeException("Metadata has been deleted from " + file.getAbsolutePath());
