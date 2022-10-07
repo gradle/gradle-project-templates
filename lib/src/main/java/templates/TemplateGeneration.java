@@ -15,6 +15,10 @@ import java.util.Properties;
 public class TemplateGeneration {
 
     public void processTemplates(File cloneDir, File targetDir, Map<String, Object> data, TemplateEngine templateEngine, TemplateLogger logger) throws Exception {
+        if (!cloneDir.exists()) {
+            throw new TemplateGenerationException("Template project not found at " + cloneDir.getAbsolutePath());
+        }
+
         templateEngine.initialize(cloneDir);
 
         for (Object f : FileUtils.listFiles(cloneDir, null, true)) {

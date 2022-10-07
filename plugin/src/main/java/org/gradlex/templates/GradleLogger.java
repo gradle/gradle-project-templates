@@ -14,4 +14,9 @@ public class GradleLogger implements TemplateLogger {
     public void info(String message) {
         delegate.info(message);
     }
+
+    @Override
+    public void warn(String msg, Throwable t) {
+        delegate.warn(msg, t);
+    }
 }

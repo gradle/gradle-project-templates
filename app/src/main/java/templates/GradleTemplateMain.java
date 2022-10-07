@@ -14,16 +14,17 @@ public class GradleTemplateMain {
     }
 
     private static void runStandaloneTemplateGeneration(String template) {
+        StandaloneLogger logger = new StandaloneLogger();
         try {
             new MaterializeTemplateAction(
                     new StandaloneUserInputHandler(),
                     template,
                     new File("build/tmp/gitClone"),
                     new File("."),
-                    new StandaloneLogger()
+                    logger
             ).execute();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.warn("Template generation failed", e);
         }
 
         // TODO the plugin variant generates Gradle wrapper files here; the standalone version should behave the same way

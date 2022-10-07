@@ -39,12 +39,17 @@ public abstract class GenerateProjectTask extends InitBuild {
                     new TextFileDownloader() // TODO cache downloaded file
             ).execute();
         } else if (getTemplate().isPresent()) {
-            new MaterializeTemplateAction(
-                    new GradleInputHandler(getServices().get(UserInputHandler.class)),
-                    getTemplate().get(),
-                    getProject().getLayout().getBuildDirectory().dir("tmp/gitClone").get().getAsFile(),
-                    projectDir.getAsFile(), new GradleLogger(getLogger())
-            ).execute();
+            try {
+                new MaterializeTemplateAction(
+                        new GradleInputHandler(getServices().get(UserInputHandler.class)),
+                        getTemplate().get(),
+                        getProject().getLayout().getBuildDirectory().dir("tmp/gitClone").get().getAsFile(),
+                        projectDir.getAsFile(), new GradleLogger(getLogger())
+                ).execute();
+            } catch (Exception e) {
+                getLogger().warn("Template generation failed", e);
+            }
+
         } else {
             getLogger().error("Task requires either the --template or the --list task option");
         }
