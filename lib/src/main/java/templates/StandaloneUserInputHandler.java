@@ -3,7 +3,6 @@ package templates;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -11,24 +10,16 @@ import java.util.Map;
 
 public class StandaloneUserInputHandler implements UserInputHandler, InputHandler {
 
-    // TODO make behavior same as in the init plugin (questionnaire retry, etc.)
-
     @Override
     public Boolean askYesNoQuestion(String question) {
         System.out.print(question + ": ");
-        String answer = formatResponse(readInput());
-        return answer.contains("yes");
+        return readBooleanInput();
     }
 
     @Override
     public boolean askYesNoQuestion(String question, boolean defaultValue) {
         System.out.print(question + "[default: " + booleanToString(defaultValue) + "]: ");
-        Boolean result = stringToBooleanOrNull(formatResponse(readInput()));
-        if (result == null) {
-            return defaultValue;
-        } else {
-            return result.booleanValue();
-        }
+        return readBooleanInput(defaultValue);
     }
 
     @Override
@@ -52,13 +43,7 @@ public class StandaloneUserInputHandler implements UserInputHandler, InputHandle
             System.out.println("  " + i + ": " + choices.get(i));
         }
 
-        System.out.print("Enter selection (default: " + defaultOption + ") [1.." + choices.size() + "] ");
-        Integer response = stringToIntegerOrNull(formatResponse(readInput()));
-        if (response == null || response <= 0  || response > idx) {
-            return defaultOption;
-        } else {
-            return choices.get(response);
-        }
+        return choices.get(readIntInput(defaultIdx, defaultOption.toString(), choices.size()));
     }
 
     @Override
@@ -85,25 +70,55 @@ public class StandaloneUserInputHandler implements UserInputHandler, InputHandle
         return response.trim().toLowerCase(Locale.ROOT);
     }
 
-    private static Boolean stringToBooleanOrNull(String formattedString) {
-        if ("yes".equals(formattedString)) {
-            return true;
-        } else if ("no".equals(formattedString)) {
-            return false;
-        } else {
-            return null;
+    private static boolean readBooleanInput() {
+        String response = formatResponse(readInput());
+        while (true) {
+            if (response.equalsIgnoreCase("yes")) {
+                return true;
+            } else if (response.equalsIgnoreCase("no")) {
+                return false;
+            } else {
+                System.out.print("Please enter 'yes' or 'no': ");
+            }
         }
     }
 
-    private static Integer stringToIntegerOrNull(String formattedString) {
-        if ("".equals(formattedString)) {
-            return null;
+    private static boolean readBooleanInput(boolean defaultResponse) {
+        String response = formatResponse(readInput());
+        while (true) {
+            if ("".equals(response)) {
+                return defaultResponse;
+            } else if (response.equalsIgnoreCase("yes")) {
+                return true;
+            } else if (response.equalsIgnoreCase("no")) {
+                return false;
+            } else {
+                System.out.print("Please enter 'yes' or 'no' [default: " + booleanToString(defaultResponse) + "]: ");
+            }
         }
-        try {
-            return Integer.parseInt(formattedString);
-        } catch (Exception e) {
-            return null;
+    }
+
+    private static int readIntInput(int defaultAnswer, String defaultString, int maxAnswer) {
+        System.out.print("Enter selection (default: " + defaultString + ") [1.." + maxAnswer + "] ");
+        int result = -1;
+        while (result < 0) {
+            String response = formatResponse(readInput());
+            if ("".equals(response)) {
+                result = defaultAnswer;
+            } else {
+                int parsedResponse = 0;
+                try {
+                    parsedResponse = Integer.parseInt(response);
+                } catch (NumberFormatException ignore) {
+                }
+                if (parsedResponse < 1 || parsedResponse > maxAnswer) {
+                    System.out.print("Please enter a value between 1 and " + maxAnswer + ": ");
+                } else {
+                    result = parsedResponse;
+                }
+            }
         }
+        return result;
     }
 
     private static String booleanToString(boolean b) {
@@ -112,11 +127,5 @@ public class StandaloneUserInputHandler implements UserInputHandler, InputHandle
         } else {
             return "no";
         }
-    }
-
-    public static void main(String[] args) {
-        //System.out.println(new StandaloneUserInputHandler().askYesNoQuestion("Would you date me if I'm dead ", true));
-        System.out.println(new StandaloneUserInputHandler().selectOption("What's your favourite planet", Arrays.asList("Earth", "Sol"), "Earth"));
-
     }
 }
